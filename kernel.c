@@ -4,6 +4,7 @@
 #include "timer.h"
 #include "config.h"
 #include "io.h"
+#include "mem.h"
 
 // Declara fila de aptos
 ready_queue_t r_queue;

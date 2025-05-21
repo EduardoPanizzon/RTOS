@@ -7,11 +7,11 @@
 #define MAX_USER_TASKS      3
 #define MAX_STACK_SIZE      32
 
-#define DEFAULT_SCHEDULER   RR_SCHEDULER
+#define DEFAULT_SCHEDULER   PRIORITY_SCHEDULER
 
 #define IDLE_DEBUG          ON
 
-#define DYNAMIC_MEM         OFF
+#define DYNAMIC_MEM         ON
 
 #define PIPE_SIZE           3
 
