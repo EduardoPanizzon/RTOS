@@ -1,8 +1,9 @@
 # MPLAB X build and configuration directories
-nbproject/Makefile-*
-nbproject/private/
+nbproject/
 build/
 dist/
+queuelogs/
+Proteus/Project Backups/
 
 # IDE and project cache files
 *.X/
@@ -21,6 +22,8 @@ dist/
 *.asm
 *.lst
 *.pre
+*.workspace
+*.pdsbak
 
 # MPLAB Code Configurator (MCC) cache (if used)
 mcc_generated_files/nbproject/
