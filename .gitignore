@@ -1,0 +1,33 @@
+# MPLAB X build and configuration directories
+nbproject/Makefile-*
+nbproject/private/
+build/
+dist/
+
+# IDE and project cache files
+*.X/
+*.orig
+*.bak
+*.log
+*.dep
+*.d
+*.hex
+*.elf
+*.map
+*.sym
+*.a
+*.o
+*.p1
+*.asm
+*.lst
+*.pre
+
+# MPLAB Code Configurator (MCC) cache (if used)
+mcc_generated_files/nbproject/
+mcc_generated_files/configuration.xml
+
+# General backup/temp files
+*~
+*.swp
+.DS_Store
+Thumbs.db
