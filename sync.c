@@ -24,7 +24,7 @@ void sem_wait(sem_t *sem)
         // Bloqueia a tarefa
         sem->s_queue[sem->s_size] = r_queue.task_running;
         sem->s_size = (sem->s_size+1) % MAX_USER_TASKS;
-        // Força a preempção
+        // Forï¿½a a preempï¿½ï¿½o
         SAVE_CONTEXT(SEM_WAITING);
         scheduler();
         RESTORE_CONTEXT();
@@ -51,17 +51,28 @@ void sem_post(sem_t *sem)
 // API para o mutex
 void mutex_init(mutex_t *m)
 {
-    m->flag = true;  // Seção crítica liberada
+    m->flag = true;  // Seï¿½ï¿½o crï¿½tica liberada
+    LATDbits.LD1 = 1;
 }
 
 void mutex_lock(mutex_t *m)
 {
     di();
-    while (!m->flag);
-    
-    m->flag = false;
-    
-    ei();    
+   if (m->flag) {
+        m->flag = false;
+        LATDbits.LD1 = 0;
+        ei();
+    }
+    else {
+        ei();
+        while (!m->flag){
+            Nop();
+        }
+        di();
+        m->flag = false;
+        LATDbits.LD1 = 0;
+        ei();
+    }  
 }
 
 void mutex_unlock(mutex_t *m)
@@ -69,6 +80,7 @@ void mutex_unlock(mutex_t *m)
     di();
     
     m->flag = true;
+    LATDbits.LD1 = 1;
     
     ei();
 }

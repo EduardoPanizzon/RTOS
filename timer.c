@@ -54,7 +54,7 @@ void __interrupt() ISR_TMR0()
         
         LATDbits.LD3 = 1;
 
-        create_task(4, 255, tarefa_4);
+        //create_task(4, 255, tarefa_4);
         
         
         

@@ -11,26 +11,22 @@ void create_pipe(pipe_t *p)
 }
 
 void write_pipe(pipe_t *p, uint8_t data)
-{
-    di();
-    
+{    
     sem_wait(&p->pipe_sem_write);
+    di();
     p->pipe_msg[p->pipe_pos_write] = data;
     p->pipe_pos_write =  (p->pipe_pos_write+1) % PIPE_SIZE;
-    sem_post(&p->pipe_sem_read);   
-    
-    ei();    
+    ei();
+    sem_post(&p->pipe_sem_read);       
 }
 
 void read_pipe(pipe_t *p, uint8_t *data)
-{
-    di();
-    
+{    
     sem_wait(&p->pipe_sem_read);
+    di();
     *data = p->pipe_msg[p->pipe_pos_read];
     p->pipe_pos_read = (p->pipe_pos_read+1) % PIPE_SIZE;
-    sem_post(&p->pipe_sem_write);
-    
     ei();
+    sem_post(&p->pipe_sem_write);    
 }
 

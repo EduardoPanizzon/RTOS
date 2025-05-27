@@ -78,7 +78,7 @@ void os_start()
     user_config();
     adc_config();
     
-    // Habilita as interrupções    
+    // Habilita as interrupï¿½ï¿½es    
     ei();
     
     // Liga o timer
@@ -116,9 +116,10 @@ void decrease_time(void)
     for (uint8_t i = 1; i < r_queue.ready_queue_size; i++) {
         if (r_queue.ready_queue[i].time_sleeping > 0) {
             r_queue.ready_queue[i].time_sleeping--;
-            if (r_queue.ready_queue[i].time_sleeping == 0) {
+            
+        }
+        if (r_queue.ready_queue[i].time_sleeping == 0) {
                 r_queue.ready_queue[i].task_state = READY;
             }
-        }
     }
 }
