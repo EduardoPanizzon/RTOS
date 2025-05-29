@@ -27,22 +27,29 @@ void start_timer0()
     T0CONbits.TMR0ON = 1;
 }
 
-extern volatile uint8_t freio_acionado;
-
 // Tratador de interrupção do timer
-void __interrupt() INTERRUPT_Handler(void) 
+void __interrupt() ISR_TMR0(void) 
 {
     // Verifica interrupção do usuário
     interrupt_user();
-    
-    // Tratamento do timer
-    if (INTCONbits.TMR0IF) 
-    {
-        INTCONbits.TMR0IF = 0;
+    di();
+    if(INTCONbits.TMR0IF){
+        // Seta o flag do timer em zero
+        INTCONbits.TMR0IF   = 0;
+        // Valor inicial do timer
         TMR0 = 0;
+
+        // Decrementa o delay das tarefas que estão em estado 
+        // de waiting
         decrease_time();
+
+        // Salva o contexto da tarefa que está em execução
         SAVE_CONTEXT(READY);
+
+        // Chama o escalonador para definir qual a próxima tarefa será executada
         scheduler();
+        // Restaura o contexto da tarefa que entrará em execução
         RESTORE_CONTEXT();
     }
+    ei();
 }

@@ -7,7 +7,6 @@
 
 typedef struct pipe {
     uint8_t *pipe_msg;  // Agora é alocado dinamicamente
-    uint8_t pipe_size;
     uint8_t pipe_pos_read;
     uint8_t pipe_pos_write;
     mutex_t pipe_mutex;
@@ -16,8 +15,7 @@ typedef struct pipe {
 } pipe_t;
 
 
-void create_pipe(pipe_t *p, uint8_t size);
-void destroy_pipe(pipe_t *p);
+void create_pipe(pipe_t *p);
 void write_pipe(pipe_t *p, uint8_t data);
 void read_pipe(pipe_t *p, uint8_t *data);
 

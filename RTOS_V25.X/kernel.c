@@ -102,7 +102,7 @@ void os_init()
 void os_start()
 {
     #if DEFAULT_SCHEDULER == PRIORITY_SCHEDULER
-    // Ordenada a fila de aptos
+        scheduler();
     #endif
     user_config();
     

@@ -25,7 +25,7 @@ void sem_wait(sem_t *sem)
         // Bloqueia a tarefa
         sem->s_queue[sem->s_size] = r_queue.task_running;
         sem->s_size = (sem->s_size+1) % MAX_USER_TASKS;
-        // Força a preempção
+        // Forï¿½a a preempï¿½ï¿½o
         SAVE_CONTEXT(SEM_WAITING);
         scheduler();
         RESTORE_CONTEXT();
@@ -53,24 +53,24 @@ void sem_post(sem_t *sem)
 // API para o mutex
 void mutex_init(mutex_t *m) 
 {
-    m->locked = false;
-    m->owner_task_id = 0;
-    m->waiting_size = 0;
+    m->flag = false;
+    m->task_id = 0;
+    m->s_size = 0;
 }
 
 void mutex_lock(mutex_t *m) 
 {
     di();
-    if (!m->locked) 
+    if (!m->flag) 
     {
-        m->locked = true;
-        m->owner_task_id = r_queue.task_running;
+        m->flag = true;
+        m->task_id = r_queue.task_running;
     } 
     else 
     {
-        if (m->waiting_size < MAX_USER_TASKS) 
+        if (m->s_size < MAX_USER_TASKS) 
         {
-            m->waiting_queue[m->waiting_size++] = r_queue.task_running;
+            m->s_queue[m->s_size++] = r_queue.task_running;
         }
         SAVE_CONTEXT(MUX_WAITING);
         scheduler();
@@ -82,24 +82,24 @@ void mutex_lock(mutex_t *m)
 void mutex_unlock(mutex_t *m) 
 {
     di();
-    if (m->locked && m->owner_task_id == r_queue.task_running) 
+    if (m->flag && m->task_id == r_queue.task_running) 
     {
-        if (m->waiting_size > 0) 
+        if (m->s_size > 0) 
         {
-            // Ativa a próxima tarefa na fila de espera
-            uint8_t next_task = m->waiting_queue[0];
-            for (uint8_t i = 1; i < m->waiting_size; i++) 
+            // Ativa a prï¿½xima tarefa na fila de espera
+            uint8_t next_task = m->s_queue[0];
+            for (uint8_t i = 1; i < m->s_size; i++) 
             {
-                m->waiting_queue[i-1] = m->waiting_queue[i];
+                m->s_queue[i-1] = m->s_queue[i];
             }
-            m->waiting_size--;
-            m->owner_task_id = next_task;
+            m->s_size--;
+            m->task_id = next_task;
             r_queue.ready_queue[next_task].task_state = READY;
         } 
         else 
         {
-            m->locked = false;
-            m->owner_task_id = 0;
+            m->flag = false;
+            m->task_id = 0;
         }
     }
     ei();

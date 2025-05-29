@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-// Estrutura de dados para o semáforo
+// Estrutura de dados para o semï¿½foro
 typedef struct sem 
 {
     int16_t s_value;
@@ -14,16 +14,18 @@ typedef struct sem
     uint8_t s_pos_out;
 } sem_t;
 
-// Estrutura de dados para variáveis mutex
+// Estrutura de dados para variï¿½veis mutex
 typedef struct mutex 
 {
-    bool locked;
-    uint8_t owner_task_id;
-    uint8_t waiting_queue[MAX_USER_TASKS];
-    uint8_t waiting_size;
+    bool flag;
+
+    //forma dois
+    uint8_t s_queue[MAX_USER_TASKS];
+    uint8_t task_id;
+    uint8_t s_size;
 } mutex_t;
 
-// API para o semáforo
+// API para o semï¿½foro
 void sem_init(sem_t *sem, int16_t value);
 void sem_wait(sem_t *sem);
 void sem_post(sem_t *sem);
