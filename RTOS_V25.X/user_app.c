@@ -95,7 +95,7 @@ void interrupt_user(void){
             LATDbits.LD1 = 0;
             freio_acionado = 1;
             tarefa_estabilidade_ativa = 1;
-            create_task(4, 4, tarefa_controle_estabilidade); 
+            create_task(4, 255, tarefa_controle_estabilidade); 
         }
     }
 }

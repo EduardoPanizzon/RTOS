@@ -61,13 +61,10 @@ void mutex_init(mutex_t *m)
 void mutex_lock(mutex_t *m) 
 {
     di();
-    if (!m->flag) 
-    {
+    if (!m->flag){
         m->flag = true;
         m->task_id = r_queue.task_running;
-    } 
-    else 
-    {
+    }else{
         if (m->s_size < MAX_USER_TASKS) 
         {
             m->s_queue[m->s_size++] = r_queue.task_running;
@@ -82,11 +79,9 @@ void mutex_lock(mutex_t *m)
 void mutex_unlock(mutex_t *m) 
 {
     di();
-    if (m->flag && m->task_id == r_queue.task_running) 
-    {
-        if (m->s_size > 0) 
-        {
-            // Ativa a pr�xima tarefa na fila de espera
+    if (m->flag && m->task_id == r_queue.task_running){
+        if (m->s_size > 0){
+            // Ativa a proxima tarefa na fila de espera
             uint8_t next_task = m->s_queue[0];
             for (uint8_t i = 1; i < m->s_size; i++) 
             {
@@ -95,9 +90,7 @@ void mutex_unlock(mutex_t *m)
             m->s_size--;
             m->task_id = next_task;
             r_queue.ready_queue[next_task].task_state = READY;
-        } 
-        else 
-        {
+        }else{
             m->flag = false;
             m->task_id = 0;
         }

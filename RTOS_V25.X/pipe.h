@@ -9,7 +9,6 @@ typedef struct pipe {
     uint8_t *pipe_msg;  // Agora é alocado dinamicamente
     uint8_t pipe_pos_read;
     uint8_t pipe_pos_write;
-    mutex_t pipe_mutex;
     sem_t pipe_sem_read;
     sem_t pipe_sem_write;
 } pipe_t;
