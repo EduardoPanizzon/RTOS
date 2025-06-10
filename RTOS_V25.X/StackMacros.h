@@ -26,34 +26,9 @@
  *
  */
 
-/*
- * This is a simple main that will start the FreeRTOS-Kernel and run a periodic task
- * that only delays if compiled with the template port, this project will do nothing.
- * For more information on getting started please look here:
- * https://freertos.org/FreeRTOS-quick-start-guide.html
- */
 
-/* FreeRTOS includes. */
-#include "user_app.h"
+#ifndef _MSC_VER /* Visual Studio doesn't support #warning. */
+    #warning The name of this file has changed to stack_macros.h.  Please update your code accordingly.  This source file (which has the original name) will be removed in a future release.
+#endif
 
-void main( void )
-{
-    config_user_app();
-  
-    //xTaskCreate(tarefa_teste, "T", configMINIMAL_STACK_SIZE, NULL, 7, NULL); 
-    //xTaskCreate(tarefa_teste_2, "T", configMINIMAL_STACK_SIZE, NULL, 7, NULL); 
-    
-    //xTaskCreate(tarefa_escritor, "E", configMINIMAL_STACK_SIZE, NULL, 5, NULL); 
-    //xTaskCreate(tarefa_leitor, "L", configMINIMAL_STACK_SIZE, NULL, 5, NULL); 
-    
-    xTaskCreate(tarefa_potenciometro, "P", configMINIMAL_STACK_SIZE, NULL, 5, NULL); 
-    //xTaskCreate(tarefa_led, "L", configMINIMAL_STACK_SIZE, NULL, 5, NULL); 
-    
-    /* Start the scheduler. */
-    vTaskStartScheduler();
-
-    for( ; ; )
-    {
-        /* Should not reach here. */
-    }
-}
+#include "stack_macros.h"

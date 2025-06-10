@@ -26,34 +26,37 @@
  *
  */
 
-/*
- * This is a simple main that will start the FreeRTOS-Kernel and run a periodic task
- * that only delays if compiled with the template port, this project will do nothing.
- * For more information on getting started please look here:
- * https://freertos.org/FreeRTOS-quick-start-guide.html
- */
+#ifndef INC_NEWLIB_FREERTOS_H
+#define INC_NEWLIB_FREERTOS_H
 
-/* FreeRTOS includes. */
-#include "user_app.h"
+/* Note Newlib support has been included by popular demand, but is not
+ * used by the FreeRTOS maintainers themselves.  FreeRTOS is not
+ * responsible for resulting newlib operation.  User must be familiar with
+ * newlib and must provide system-wide implementations of the necessary
+ * stubs. Be warned that (at the time of writing) the current newlib design
+ * implements a system-wide malloc() that must be provided with locks.
+ *
+ * See the third party link http://www.nadler.com/embedded/newlibAndFreeRTOS.html
+ * for additional information. */
 
-void main( void )
-{
-    config_user_app();
-  
-    //xTaskCreate(tarefa_teste, "T", configMINIMAL_STACK_SIZE, NULL, 7, NULL); 
-    //xTaskCreate(tarefa_teste_2, "T", configMINIMAL_STACK_SIZE, NULL, 7, NULL); 
-    
-    //xTaskCreate(tarefa_escritor, "E", configMINIMAL_STACK_SIZE, NULL, 5, NULL); 
-    //xTaskCreate(tarefa_leitor, "L", configMINIMAL_STACK_SIZE, NULL, 5, NULL); 
-    
-    xTaskCreate(tarefa_potenciometro, "P", configMINIMAL_STACK_SIZE, NULL, 5, NULL); 
-    //xTaskCreate(tarefa_led, "L", configMINIMAL_STACK_SIZE, NULL, 5, NULL); 
-    
-    /* Start the scheduler. */
-    vTaskStartScheduler();
+#include <reent.h>
 
-    for( ; ; )
-    {
-        /* Should not reach here. */
-    }
-}
+#define configUSE_C_RUNTIME_TLS_SUPPORT    1
+
+#ifndef configTLS_BLOCK_TYPE
+    #define configTLS_BLOCK_TYPE           struct _reent
+#endif
+
+#ifndef configINIT_TLS_BLOCK
+    #define configINIT_TLS_BLOCK( xTLSBlock, pxTopOfStack )    _REENT_INIT_PTR( &( xTLSBlock ) )
+#endif
+
+#ifndef configSET_TLS_BLOCK
+    #define configSET_TLS_BLOCK( xTLSBlock )    ( _impure_ptr = &( xTLSBlock ) )
+#endif
+
+#ifndef configDEINIT_TLS_BLOCK
+    #define configDEINIT_TLS_BLOCK( xTLSBlock )    _reclaim_reent( &( xTLSBlock ) )
+#endif
+
+#endif /* INC_NEWLIB_FREERTOS_H */
