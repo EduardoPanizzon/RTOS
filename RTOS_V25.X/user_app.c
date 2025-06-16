@@ -18,11 +18,11 @@ void config_user_app()
     TRISBbits.TRISB0    = 1;
     
     s = xSemaphoreCreateMutex();
-    
-    fila = xQueueCreate(5, sizeof(char));
+    fila = xQueueCreate(5, sizeof(uint16_t));
     
     // Configura conversor AD
     config_adc();
+    config_int0();
 }
 
 // Exemplo conversor AD
@@ -113,7 +113,7 @@ void tarefa_injecao_eletronica() {
 void tarefa_controle_estabilidade(){
     freio_acionado = 1;
     
-    while(PORTBbits.RB0 == 0){
+    while(PORTFbits.RF6 == 1){
         PORTDbits.RD3 = 1;        
         
         vTaskDelay(4);
@@ -124,10 +124,34 @@ void tarefa_controle_estabilidade(){
     
     tarefa_estabilidade_ativa = 0;
     
-    //remove_task(tarefa_controle_estabilidade);
+    vTaskDelete(NULL);
     
     while(1){
         //yield();
         PORTDbits.RD2 = 1;
+    }
+}
+
+void config_int0()
+{
+    // Prioridade de CPU
+    SRbits.IPL          = 0b100;    // Prioridade 4
+    INTCON2bits.INT0EP  = 0;        // Borda de subida (sinal positivo)
+    IFS0bits.INT0IF     = 0;        // Flag da interrup??o zero (n?o atividado)
+    IEC0bits.INT0IE     = 1;        // Habilita interrup??o externa zero
+    IPC0bits.INT0IP     = 0b100;    // Prioridade 4
+    __builtin_enable_interrupts();
+}
+
+
+void __attribute__((interrupt())) _INT0Interrupt(void){
+    IFS0bits.INT0IF = 0; // Limpa a flag da interrupção INT0
+
+    if(PORTFbits.RF6 == 1 && !tarefa_estabilidade_ativa){
+            PORTDbits.RD1 = 0;
+            freio_acionado = 1;
+            tarefa_estabilidade_ativa = 1;
+            xTaskCreate(tarefa_controle_estabilidade, "CE", configMINIMAL_STACK_SIZE, NULL, 1, NULL); 
+
     }
 }

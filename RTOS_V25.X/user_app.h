@@ -3,11 +3,14 @@
 
 #include "FreeRTOS.h"
 #include "task.h"
-#include "xc.h"
+#include <xc.h>
 #include "FreeRTOSConfig.h"
 #include "queue.h"
+#include <libpic30.h>
 
 void config_user_app();
+void config_int0();
+void __attribute__((interrupt())) _INT0Interrupt(void);
 
 void tarefa_acelerador();
 void tarefa_controle_central();
